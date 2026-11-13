@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="8" fill="#9e3529"/>
+  <rect x="5" y="5" width="54" height="54" rx="5" fill="none" stroke="#f7f2e7" stroke-width="2" opacity=".75"/>
+  <text x="32" y="27" text-anchor="middle" fill="#f7f2e7" font-family="KaiTi, serif" font-size="19">李</text>
+  <text x="32" y="50" text-anchor="middle" fill="#f7f2e7" font-family="KaiTi, serif" font-size="19">杜</text>
+</svg>
