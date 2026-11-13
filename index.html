@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="基于李白、杜甫诗句互文配对数据制作的可交互检索与相似度图谱。">
+  <title>李杜互文志｜诗句相似度图谱</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+  <div class="reading-progress" aria-hidden="true"><span id="readingProgress"></span></div>
+
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#home" aria-label="返回首页">
+      <span class="brand-mark">李杜</span>
+      <span class="brand-copy">互文志<small>LI · DU ATLAS</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="展开导航" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <nav class="main-nav" id="mainNav" aria-label="主导航">
+      <a href="#explore">互文检索</a>
+      <a href="#atlas">关系星图</a>
+      <a href="#spectrum">相似度谱</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-wash hero-wash--li" aria-hidden="true"></div>
+      <div class="hero-wash hero-wash--du" aria-hidden="true"></div>
+      <div class="hero-mountain hero-mountain--one" aria-hidden="true"></div>
+      <div class="hero-mountain hero-mountain--two" aria-hidden="true"></div>
+
+      <div class="hero-silhouette hero-silhouette--li" aria-hidden="true">
+        <img src="assets/li-figure-color.png" alt="">
+      </div>
+      <div class="hero-silhouette hero-silhouette--du" aria-hidden="true">
+        <img src="assets/du-figure-color.png" alt="">
+      </div>
+
+      <div class="hero-side-label hero-side-label--left" aria-hidden="true">诗句 · 作品 · 源流</div>
+      <div class="hero-side-label hero-side-label--right" aria-hidden="true">相似 · 呼应 · 互文</div>
+
+      <div class="hero-center">
+        <p class="eyebrow"><span></span>唐诗互文 · 相似度图谱<span></span></p>
+        <h1 class="hero-title" aria-label="李杜">
+          <span>李</span><i></i><span>杜</span>
+        </h1>
+        <p class="hero-subtitle">在相似之间，重读两座唐诗高峰</p>
+        <p class="hero-intro">从诗句到篇章，从一次相遇到万千回响。<br>所有关系均来自原始数据，逐句可溯。</p>
+        <div class="hero-actions">
+          <a class="btn btn--ink" href="#explore">进入互文检索 <span>↘</span></a>
+          <a class="btn btn--ghost" href="#atlas">查看关系星图</a>
+        </div>
+      </div>
+
+      <div class="hero-feature" id="heroFeature">
+        <div class="hero-feature__head">
+          <span>最高相似 · 原作对照</span>
+          <span class="hero-feature__score" id="heroScore">—</span>
+        </div>
+        <div class="hero-feature__body" id="heroFeatureBody">
+          <span>正在读取关系数据…</span>
+        </div>
+      </div>
+
+      <div class="hero-stats" aria-label="数据概览">
+        <div><strong id="heroLiLines">—</strong><span>李白诗句</span></div>
+        <div><strong id="heroRelations">—</strong><span>互文配对</span></div>
+        <div><strong id="heroDuLines">—</strong><span>杜甫诗句</span></div>
+        <div><strong id="heroMax">—</strong><span>最高相似</span></div>
+      </div>
+      <a class="scroll-cue" href="#explore" aria-label="向下浏览"><span></span>向下浏览</a>
+    </section>
+
+    <section class="section section--explore" id="explore">
+      <div class="section-heading">
+        <div class="section-number">01</div>
+        <div class="section-title-wrap">
+          <p class="section-kicker">SEARCH THE ECHOES</p>
+          <h2>逐句寻踪</h2>
+        </div>
+        <p class="section-lead">输入诗句、篇名或编号，观察李白与杜甫之间一条条可回溯的文字回响。</p>
+      </div>
+
+      <div class="explore-shell">
+        <div class="search-panel">
+          <label class="search-box" for="searchInput">
+            <span class="search-icon" aria-hidden="true"></span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="输入诗句、篇名或诗歌 ID，例如：醉如泥">
+            <button id="clearSearch" type="button" aria-label="清空搜索">×</button>
+          </label>
+
+          <div class="control-row">
+            <div class="segmented" id="poetFilter" role="group" aria-label="检索侧重">
+              <button class="is-active" data-poet="all" type="button">全部</button>
+              <button data-poet="li" type="button">李白句</button>
+              <button data-poet="du" type="button">杜甫句</button>
+            </div>
+            <div class="sort-control">
+              <label for="sortSelect">排序</label>
+              <select id="sortSelect">
+                <option value="score">相似度由高到低</option>
+                <option value="source">保持原表顺序</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="score-control">
+            <div class="score-control__head">
+              <label for="scoreRange">最低相似度</label>
+              <output id="scoreOutput" for="scoreRange">70.00%</output>
+            </div>
+            <input id="scoreRange" type="range" min="7000" max="10000" value="7000" step="1">
+            <div class="range-labels"><span>70%</span><span>80%</span><span>90%</span><span>100%</span></div>
+          </div>
+        </div>
+
+        <div class="results-head">
+          <p>找到 <strong id="resultCount">—</strong> 组互文关系</p>
+          <div class="results-head__actions">
+            <span class="result-page" id="resultPage"></span>
+          </div>
+        </div>
+
+        <div class="results-grid" id="resultsGrid" aria-live="polite"></div>
+        <div class="empty-state" id="emptyState" hidden>
+          <span>空</span>
+          <h3>没有找到相符的关系</h3>
+          <p>尝试缩短检索词，或降低相似度阈值。</p>
+          <button class="btn btn--ink" id="resetFilters" type="button">重置筛选</button>
+        </div>
+        <div class="load-wrap">
+          <button class="load-more" id="loadMore" type="button">展开更多互文 <span>＋</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--atlas" id="atlas">
+      <div class="section-heading section-heading--light">
+        <div class="section-number">02</div>
+        <div class="section-title-wrap">
+          <p class="section-kicker">CONSTELLATION OF LINES</p>
+          <h2>关系星图</h2>
+        </div>
+        <p class="section-lead">每一颗星是一句诗，每一条弧线是一组原作互文。拖动阈值，观看高分关系逐层显现。</p>
+      </div>
+
+      <div class="atlas-shell">
+        <div class="atlas-toolbar">
+          <div class="atlas-legend">
+            <span><i class="dot dot--li"></i>李白诗句</span>
+            <span><i class="dot dot--du"></i>杜甫诗句</span>
+            <span><i class="line"></i>相似度关系</span>
+          </div>
+          <div class="atlas-control">
+            <label for="atlasRange">阈值 <output id="atlasOutput">90.00%</output></label>
+            <input id="atlasRange" type="range" min="7000" max="10000" value="9000" step="1">
+          </div>
+          <div class="atlas-count"><strong id="atlasCount">—</strong><span>组关系入图</span></div>
+        </div>
+
+        <div class="atlas-board" id="atlasBoard">
+          <div class="atlas-column-label atlas-column-label--li">李 白</div>
+          <div class="atlas-column-label atlas-column-label--du">杜 甫</div>
+          <svg id="atlasSvg" viewBox="0 0 1200 720" role="img" aria-label="李白与杜甫诗句互文关系星图"></svg>
+          <div class="atlas-tooltip" id="atlasTooltip" hidden></div>
+          <div class="atlas-instruction">悬停查看，点击弧线或诗名展开原作</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--spectrum" id="spectrum">
+      <div class="section-heading">
+        <div class="section-number">03</div>
+        <div class="section-title-wrap">
+          <p class="section-kicker">A PORTRAIT OF SIMILARITY</p>
+          <h2>相似度谱</h2>
+        </div>
+        <p class="section-lead">把两万余组关系铺开，看见高分稀薄处的锋芒，也看见相似度集中沉淀的河床。</p>
+      </div>
+
+      <div class="spectrum-layout">
+        <div class="spectrum-main">
+          <div class="metric-row">
+            <article class="metric-card"><span>诗句总量</span><strong id="metricLines">—</strong><small>李白 + 杜甫</small></article>
+            <article class="metric-card"><span>互文配对</span><strong id="metricRelations">—</strong><small>原始关系表</small></article>
+            <article class="metric-card"><span>平均相似度</span><strong id="metricMean">—</strong><small>按原值计算</small></article>
+            <article class="metric-card metric-card--accent"><span>≥ 90%</span><strong id="metricHigh">—</strong><small>高分关系</small></article>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-head">
+              <div>
+                <p>相似度分布</p>
+                <h3>七段相似度区间</h3>
+              </div>
+              <span>柱高采用对数刻度 · 悬停查看数量</span>
+            </div>
+            <div class="histogram" id="histogram"></div>
+            <div class="chart-axis"><span>70%</span><span>80%</span><span>90%</span><span>100%</span></div>
+          </div>
+        </div>
+
+        <aside class="rank-card">
+          <div class="rank-head">
+            <span>TOP MATCHES</span>
+            <h3>高分互文</h3>
+          </div>
+          <ol id="topRelations" class="rank-list"></ol>
+          <button class="rank-more" id="viewHighScores" type="button">查看全部 90%+ 关系 <span>↗</span></button>
+        </aside>
+      </div>
+    </section>
+
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-mark">李杜</div>
+    <p>互文志 · 基于原始诗句配对数据的交互图谱</p>
+    <a href="#home">回到卷首 ↑</a>
+  </footer>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="detail-drawer" id="detailDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head">
+      <span>原作互文</span>
+      <button id="drawerClose" type="button" aria-label="关闭详情">×</button>
+    </div>
+    <div class="drawer-content" id="drawerContent"></div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
